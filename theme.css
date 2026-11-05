@@ -1,0 +1,15 @@
+/* Shared colours and fonts for the popup, options and lock pages. */
+:root {
+  --dd-bg: #111214;
+  --dd-surface: #1c1e21;
+  --dd-border: #333;
+  --dd-text: #f0f2f5;
+  --dd-accent: #5c4a1a;
+  --dd-gold: #c9a24a;
+  --dd-error: #ff7b7b;
+  --dd-serif: Georgia, "Times New Roman", serif;
+  --dd-sans: system-ui, sans-serif;
+  color-scheme: dark;
+}
+body { margin: 0; background: var(--dd-bg); color: var(--dd-text); font-family: var(--dd-sans); }
+h1, h2 { font-family: var(--dd-serif); }

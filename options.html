@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dopamine Detox — Settings</title>
+  <link rel="icon" href="icons/icon32.png">
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    body { padding: 40px 20px; font-size: 14px; }
+    main { max-width: 640px; margin: 0 auto; }
+    h1 { font-size: 28px; margin: 0 0 28px; }
+    h2 { font-size: 20px; margin: 36px 0 12px; }
+    .note { font-size: 12px; opacity: 0.6; margin: 0 0 12px; }
+    .card { background: var(--dd-surface); border: 1px solid var(--dd-border); border-radius: 8px; padding: 16px; }
+    ul { list-style: none; margin: 0 0 12px; padding: 0; }
+    li { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #2a2c30; }
+    li:last-child { border-bottom: 0; }
+    li .grow { flex: 1; }
+    li .sub { font-size: 12px; opacity: 0.5; }
+    li .warn { color: var(--dd-error); opacity: 1; }
+    input[type=text], input[type=time] { padding: 8px; font-size: 14px; border: 1px solid var(--dd-border);
+           border-radius: 6px; background: var(--dd-bg); color: inherit; }
+    button { padding: 8px 14px; font-size: 13px; font-weight: 600; border: 0; border-radius: 6px;
+             background: var(--dd-text); color: var(--dd-bg); cursor: pointer; }
+    button.secondary { background: transparent; color: inherit; border: 1px solid #444; }
+    button:disabled { opacity: 0.35; cursor: default; }
+    .form-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .days label { display: inline-flex; align-items: center; gap: 3px; margin-right: 8px; font-size: 13px; }
+    .error { color: var(--dd-error); font-size: 12px; min-height: 1em; margin-top: 8px; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .stat .num { font-family: var(--dd-serif); font-size: 28px; }
+    .stat .lbl { font-size: 12px; opacity: 0.6; }
+    .bars { display: flex; gap: 8px; align-items: flex-end; height: 100px; }
+    .bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+           height: 100%; font-size: 11px; gap: 4px; }
+    .bar .fill { width: 100%; background: var(--dd-gold); border-radius: 3px 3px 0 0; min-height: 2px; }
+    .bar .day { opacity: 0.5; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Dopamine Detox</h1>
+
+    <h2>Sites</h2>
+    <p class="note" id="sites-note">Sites that are blocked during a lock.</p>
+    <div class="card">
+      <ul id="sites"></ul>
+      <form id="site-form" class="form-row">
+        <input type="text" id="site-input" placeholder="youtube.com" style="flex:1">
+        <button type="submit">Add site</button>
+      </form>
+      <div class="error" id="site-error"></div>
+    </div>
+
+    <h2>Schedules</h2>
+    <p class="note">Lock automatically at set times every week. A schedule can't be deleted while it's running.</p>
+    <div class="card">
+      <ul id="schedules"></ul>
+      <form id="schedule-form">
+        <div class="days" id="days"></div>
+        <div class="form-row" style="margin-top:10px">
+          <input type="time" id="start" value="09:00" required> to
+          <input type="time" id="end" value="17:00" required>
+          <button type="submit">Add schedule</button>
+        </div>
+      </form>
+      <div class="error" id="schedule-error"></div>
+    </div>
+
+    <h2>Stats</h2>
+    <div class="card">
+      <div class="stats" id="stats"></div>
+      <div class="note">Visits blocked, last 7 days</div>
+      <div class="bars" id="bars"></div>
+    </div>
+  </main>
+  <script src="shared.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

@@ -2,32 +2,57 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="theme.css">
   <style>
-    body { width: 260px; margin: 0; padding: 18px; background: #111214; color: #f0f2f5;
-           font-family: system-ui, sans-serif; }
-    h1 { font-family: Georgia, serif; font-size: 18px; margin: 0 0 14px; }
+    body { width: 260px; padding: 18px; }
+    h1 { font-size: 18px; margin: 0 0 14px; }
+    .section-label { font-size: 12px; opacity: 0.7; margin-bottom: 6px; }
+    .presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
+    .presets button { padding: 7px 0; font-size: 12px; font-weight: 600; background: var(--dd-surface);
+                      color: inherit; border: 1px solid var(--dd-border); }
+    .presets button:hover:not(:disabled) { border-color: #777; }
     .row { display: flex; gap: 8px; margin-bottom: 12px; }
     label { flex: 1; font-size: 12px; opacity: 0.7; }
     input { width: 100%; box-sizing: border-box; margin-top: 4px; padding: 8px; font-size: 16px;
-            border: 1px solid #333; border-radius: 6px; background: #1c1e21; color: inherit; }
+            border: 1px solid var(--dd-border); border-radius: 6px; background: var(--dd-surface); color: inherit; }
     button { width: 100%; padding: 10px; font-size: 14px; font-weight: 600; border: 0;
-             border-radius: 6px; background: #f0f2f5; color: #111214; cursor: pointer; }
-    #status { font-size: 14px; line-height: 1.5; }
-    #error { color: #ff7b7b; font-size: 12px; margin-top: 8px; min-height: 1em; }
+             border-radius: 6px; background: var(--dd-text); color: var(--dd-bg); cursor: pointer; }
+    button:disabled { opacity: 0.4; cursor: default; }
+    #status { font-size: 14px; line-height: 1.5; margin-bottom: 14px; }
+    #error { color: var(--dd-error); font-size: 12px; margin-top: 8px; min-height: 1em; }
+    #stats { font-size: 12px; opacity: 0.6; margin-top: 10px; }
+    #incognito { font-size: 12px; line-height: 1.4; background: #2a2210; border: 1px solid var(--dd-accent);
+                 border-radius: 6px; padding: 10px; margin-top: 14px; }
+    #incognito button { margin-top: 8px; padding: 6px; font-size: 12px; background: var(--dd-accent); color: var(--dd-text); }
+    #settings { display: block; margin-top: 12px; font-size: 12px; color: inherit; opacity: 0.6; }
     [hidden] { display: none !important; }
   </style>
 </head>
 <body>
   <h1>Dopamine Detox</h1>
+  <div id="status" hidden></div>
+  <div class="section-label" id="section-label">Lock for</div>
+  <div class="presets">
+    <button type="button" data-min="15">15m</button>
+    <button type="button" data-min="60">1h</button>
+    <button type="button" data-min="240">4h</button>
+    <button type="button" data-rest-of-day>Today</button>
+  </div>
   <form id="form">
     <div class="row">
       <label>Hours<input id="hours" type="number" min="0" max="168" value="0"></label>
       <label>Minutes<input id="minutes" type="number" min="0" max="59" value="30"></label>
     </div>
-    <button type="submit">Lock Facebook &amp; Instagram</button>
+    <button type="submit" id="submit">Lock social media</button>
     <div id="error"></div>
   </form>
-  <div id="status" hidden></div>
+  <div id="stats"></div>
+  <div id="incognito" hidden>
+    Incognito isn't locked. Turn on <b>Allow in Incognito</b> for this extension.
+    <button id="incognito-fix" type="button">Open extension settings</button>
+  </div>
+  <a href="#" id="settings">Sites, schedules &amp; stats</a>
+  <script src="shared.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

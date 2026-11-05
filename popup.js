@@ -1,29 +1,43 @@
 const form = document.getElementById("form");
 const status = document.getElementById("status");
 const error = document.getElementById("error");
+const restOfDay = document.querySelector("[data-rest-of-day]");
+let state = null;
 let tick = null;
 
-function format(ms) {
-  const s = Math.max(0, Math.ceil(ms / 1000));
-  const h = Math.floor(s / 3600);
-  const m = Math.floor((s % 3600) / 60);
-  const sec = String(s % 60).padStart(2, "0");
-  return h ? `${h}:${String(m).padStart(2, "0")}:${sec}` : `${m}:${sec}`;
+// When locked, new time is added to the end of the current lock; otherwise it starts now.
+const lockBase = () => ddLockEnd(state, Date.now()) || Date.now();
+
+async function setLockUntil(lockUntil) {
+  if (lockUntil <= lockBase()) return; // never shorten
+  await chrome.storage.local.set({ lockUntil });
 }
 
-function render(lockUntil) {
+function render() {
   clearInterval(tick);
   const update = () => {
-    const left = (lockUntil || 0) - Date.now();
-    const locked = left > 0;
-    form.hidden = locked;
+    const now = Date.now();
+    const end = ddLockEnd(state, now);
+    const locked = end > 0;
     status.hidden = !locked;
-    if (locked) status.textContent = `Facebook & Instagram are locked. Unlocks in ${format(left)}.`;
-    else clearInterval(tick);
+    if (locked) status.textContent = `Social media is locked. Unlocks in ${ddFormat(end - now)}.`;
+    document.getElementById("section-label").textContent = locked ? "Add time" : "Lock for";
+    document.getElementById("submit").textContent = locked ? "Add time" : "Lock social media";
+    restOfDay.disabled = lockBase() >= ddMidnight(now);
   };
   update();
   tick = setInterval(update, 1000);
+
+  const today = state.blocked[ddDayKey(Date.now())] || 0;
+  const { current } = ddStreaks(state.lockedDays);
+  document.getElementById("stats").textContent =
+    `Blocked ${today} visit${today === 1 ? "" : "s"} today · ${current}-day streak`;
 }
+
+document.querySelectorAll("[data-min]").forEach((btn) =>
+  btn.addEventListener("click", () => setLockUntil(lockBase() + Number(btn.dataset.min) * 60000))
+);
+restOfDay.addEventListener("click", () => setLockUntil(ddMidnight(Date.now())));
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -35,8 +49,27 @@ form.addEventListener("submit", (e) => {
     return;
   }
   error.textContent = "";
-  const lockUntil = Date.now() + ms;
-  chrome.storage.local.set({ lockUntil }, () => render(lockUntil));
+  setLockUntil(lockBase() + ms);
 });
 
-chrome.storage.local.get("lockUntil", ({ lockUntil }) => render(lockUntil));
+async function load() {
+  state = await ddGetState();
+  render();
+}
+load();
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "local") load();
+});
+
+chrome.extension.isAllowedIncognitoAccess((allowed) => {
+  document.getElementById("incognito").hidden = allowed;
+});
+document.getElementById("incognito-fix").addEventListener("click", () => {
+  chrome.tabs.create({ url: `chrome://extensions/?id=${chrome.runtime.id}` });
+});
+document.getElementById("settings").addEventListener("click", (e) => {
+  e.preventDefault();
+  chrome.runtime.openOptionsPage().catch(() =>
+    chrome.tabs.create({ url: chrome.runtime.getURL("options.html") })
+  );
+});
