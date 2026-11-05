@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { width: 260px; margin: 0; padding: 18px; background: #111214; color: #f0f2f5;
+           font-family: system-ui, sans-serif; }
+    h1 { font-family: Georgia, serif; font-size: 18px; margin: 0 0 14px; }
+    .row { display: flex; gap: 8px; margin-bottom: 12px; }
+    label { flex: 1; font-size: 12px; opacity: 0.7; }
+    input { width: 100%; box-sizing: border-box; margin-top: 4px; padding: 8px; font-size: 16px;
+            border: 1px solid #333; border-radius: 6px; background: #1c1e21; color: inherit; }
+    button { width: 100%; padding: 10px; font-size: 14px; font-weight: 600; border: 0;
+             border-radius: 6px; background: #f0f2f5; color: #111214; cursor: pointer; }
+    #status { font-size: 14px; line-height: 1.5; }
+    #error { color: #ff7b7b; font-size: 12px; margin-top: 8px; min-height: 1em; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <h1>Dopamine Detox</h1>
+  <form id="form">
+    <div class="row">
+      <label>Hours<input id="hours" type="number" min="0" max="168" value="0"></label>
+      <label>Minutes<input id="minutes" type="number" min="0" max="59" value="30"></label>
+    </div>
+    <button type="submit">Lock Facebook &amp; Instagram</button>
+    <div id="error"></div>
+  </form>
+  <div id="status" hidden></div>
+  <script src="popup.js"></script>
+</body>
+</html>
