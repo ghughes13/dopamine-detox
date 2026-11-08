@@ -50,7 +50,8 @@ async function sync() {
   if (end) {
     chrome.alarms.create("transition", { when: end });
     if (!(await chrome.alarms.get("tick"))) chrome.alarms.create("tick", { periodInMinutes: 1 });
-    chrome.action.setBadgeBackgroundColor({ color: "#5c4a1a" });
+    chrome.action.setBadgeBackgroundColor({ color: "#ecca69" });
+    chrome.action.setBadgeTextColor({ color: "#111214" });
     chrome.action.setBadgeText({ text: ddBadgeText(end - now) });
     await recordLockedDay(state, now);
     await redirectOpenTabs(prev.locked ? sites.filter((d) => !prev.sites.includes(d)) : sites);
